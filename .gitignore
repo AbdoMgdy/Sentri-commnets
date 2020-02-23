@@ -1,0 +1,9 @@
+__pycache__/
+ignore/
+*.pyc
+*-workspace
+images
+node_modules
+npm-debug.log
+.DS_Store
+venv
