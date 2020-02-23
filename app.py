@@ -42,7 +42,7 @@ def timer_function():
 
 def Look_for_comments(vendor):
     print(vendor['page_id'])
-    graph = GraphAPI(access_token=vendor['access_token'], version="6.0")
+    graph = GraphAPI(access_token=vendor['access_token'])
     global last_time_function_ran
     print('Started at {} ....'.format(last_time_function_ran))
 
