@@ -35,21 +35,25 @@ last_time_function_ran = datetime.strptime(
 
 def timer_function():
     start_time = time()
+    global last_time_function_ran
     while True:
-        Look_for_comments(vendors[1])
-        sleep(300.0 - (time() % 300.0))
+        for vendor in vendors:
+            Look_for_comments(vendor)
+        last_time_function_ran = pytz.utc.localize(datetime.utcnow())
+        sleep(20.0 - (time() % 20.0))
 
 
 def Look_for_comments(vendor):
     print(vendor['page_id'])
     graph = GraphAPI(access_token=vendor['access_token'])
-    global last_time_function_ran
+
     print('Started at {} ....'.format(last_time_function_ran))
 
     posts = graph.get_connections(
         id=vendor['page_id'], connection_name='posts', fields='updated_time,comments{message,created_time}')
     data = posts['data']
     for post in data:
+
         post_updated_time = datetime.strptime(
             post['updated_time'], time_format)
         if post_updated_time > last_time_function_ran:
@@ -66,7 +70,6 @@ def Look_for_comments(vendor):
                                           message=msg)
                         print('Replied to Comment')
 
-    last_time_function_ran = pytz.utc.localize(datetime.utcnow())
     print('...Finished at {}'.format(last_time_function_ran))
 
 
@@ -92,6 +95,7 @@ def ask_wit(msg, vendor):
 
 
 def check_for_comments(_id, graph, vendor):
+    print('Checking Comments')
     comments = graph.get_connections(
         id=_id, connection_name='comments')['data']
     for comment in comments:
@@ -101,11 +105,5 @@ def check_for_comments(_id, graph, vendor):
 
 
 # ================================================= Start Execution ================================================= #
-if __name__ == "__main__":
-    # try:
-    #     loop.run_until_complete(main())
-    # except Exception as e:
-    #     pass
-    # finally:
-    #     loop.close()
-    timer_function()
+# if __name__ == "__main__":
+timer_function()
